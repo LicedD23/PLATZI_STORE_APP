@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Producto - Platzi Store</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .navbar {
+            background: rgba(30, 58, 138, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 30px rgba(59, 130, 246, 0.3);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #60a5fa;
+            text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.7);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #60a5fa;
+            border: 2px solid #60a5fa;
+        }
+        
+        .btn-outline:hover {
+            background: #60a5fa;
+            color: #1e1b4b;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6b7280, #4b5563);
+            color: white;
+            box-shadow: 0 0 15px rgba(107, 114, 128, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(107, 114, 128, 0.5);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
+            background: linear-gradient(45deg, #60a5fa, #93c5fd, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            color: #bfdbfe;
+        }
+        
+        .form-container {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            margin-bottom: 2rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #bfdbfe;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .required {
+            color: #f87171;
+        }
+        
+        input, select, textarea {
+            padding: 1rem;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(30, 58, 138, 0.2);
+            color: #bfdbfe;
+            backdrop-filter: blur(10px);
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+            background: rgba(30, 58, 138, 0.3);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: rgba(191, 219, 254, 0.7);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .messages {
+            margin-bottom: 2rem;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            border-left: 4px solid;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .alert-success {
+            border-left-color: #10b981;
+            color: #6ee7b7;
+        }
+        
+        .alert-error {
+            border-left-color: #ef4444;
+            color: #fca5a5;
+        }
+        
+        .error-list {
+            color: #fca5a5;
+            margin-top: 0.5rem;
+        }
+        
+        .error-list ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .char-counter {
+            font-size: 0.85rem;
+            color: rgba(191, 219, 254, 0.7);
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #60a5fa;
+        }
+        
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+        
+        .url-preview {
+            margin-top: 0.5rem;
+        }
+        
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 10px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            background: rgba(30, 58, 138, 0.1);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-store"></i> Platzi Store
+            </div>
+            <div class="nav-actions">
+                <a href="{% url 'products:products_menu_views' %}" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+                <a href="{% url 'products:products_menu_views' %}" class="btn btn-secondary">
+                    <i class="fas fa-list"></i> Ver Productos
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1><i class="fas fa-plus-circle"></i> Agregar Producto</h1>
+            <p>Completa la información para crear un nuevo producto</p>
+        </div>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-info-circle"></i> {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" class="product-form">
+            {% csrf_token %}
+            
+            <div class="form-container">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="title">
+                            <i class="fas fa-tag"></i> Título del Producto <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            value="{{ form.title.value|default:'' }}"
+                            placeholder="Ej: iPhone 13 Pro Max"
+                            required
+                            maxlength="200"
+                        >
+                        <div class="char-counter">
+                            <span id="title-count">0</span>/200 caracteres
+                        </div>
+                        {% if form.title.errors %}
+                        <div class="error-list">
+                            <ul>
+                                {% for error in form.title.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="price">
+                                <i class="fas fa-dollar-sign"></i> Precio <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="price" 
+                                name="price" 
+                                value="{{ form.price.value|default:'' }}"
+                                placeholder="0.00"
+                                step="0.01"
+                                min="0"
+                                required
+                            >
+                            {% if form.price.errors %}
+                            <div class="error-list">
+                                <ul>
+                                    {% for error in form.price.errors %}
+                                    <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">
+                                <i class="fas fa-folder"></i> Categoría <span class="required">*</span>
+                            </label>
+                            <select id="category" name="categoryId" required>
+                                <option value="">Seleccionar categoría</option>
+                                {% for category in categories %}
+                                <option 
+                                    value="{{ category.id }}"
+                                    {% if form.categoryId.value == category.id %}selected{% endif %}
+                                >
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.categoryId.errors %}
+                            <div class="error-list">
+                                <ul>
+                                    {% for error in form.categoryId.errors %}
+                                    <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">
+                            <i class="fas fa-align-left"></i> Descripción <span class="required">*</span>
+                        </label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            placeholder="Describe las características principales del producto..."
+                            required
+                            maxlength="1000"
+                        >{{ form.description.value|default:'' }}</textarea>
+                        <div class="char-counter">
+                            <span id="description-count">0</span>/1000 caracteres
+                        </div>
+                        {% if form.description.errors %}
+                        <div class="error-list">
+                            <ul>
+                                {% for error in form.description.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_url_1">
+                            <i class="fas fa-image"></i> URL de Imagen 1 <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="url" 
+                            id="image_url_1" 
+                            name="image_url_1" 
+                            value="{{ form.image_url_1.value|default:'' }}"
+                            placeholder="https://ejemplo.com/imagen1.jpg"
+                            required
+                        >
+                        <div id="preview_1" class="url-preview"></div>
+                        {% if form.image_url_1.errors %}
+                        <div class="error-list">
+                            <ul>
+                                {% for error in form.image_url_1.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_url_2">
+                            <i class="fas fa-image"></i> URL de Imagen 2 (opcional)
+                        </label>
+                        <input 
+                            type="url" 
+                            id="image_url_2" 
+                            name="image_url_2" 
+                            value="{{ form.image_url_2.value|default:'' }}"
+                            placeholder="https://ejemplo.com/imagen2.jpg (opcional)"
+                        >
+                        <div id="preview_2" class="url-preview"></div>
+                        {% if form.image_url_2.errors %}
+                        <div class="error-list">
+                            <ul>
+                                {% for error in form.image_url_2.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_url_3">
+                            <i class="fas fa-image"></i> URL de Imagen 3 (opcional)
+                        </label>
+                        <input 
+                            type="url" 
+                            id="image_url_3" 
+                            name="image_url_3" 
+                            value="{{ form.image_url_3.value|default:'' }}"
+                            placeholder="https://ejemplo.com/imagen3.jpg (opcional)"
+                        >
+                        <div id="preview_3" class="url-preview"></div>
+                        {% if form.image_url_3.errors %}
+                        <div class="error-list">
+                            <ul>
+                                {% for error in form.image_url_3.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i> Guardando producto...
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Producto
+                    </button>
+                    <a href="{% url 'products:products_menu_views' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateCharCounter(input, counterId, maxLength) {
+            const counter = document.getElementById(counterId);
+            const currentLength = input.value.length;
+            counter.textContent = currentLength;
+            
+            if (currentLength > maxLength * 0.9) {
+                counter.style.color = '#f87171';
+            } else {
+                counter.style.color = 'rgba(191, 219, 254, 0.7)';
+            }
+        }
+
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        
+        titleInput.addEventListener('input', () => updateCharCounter(titleInput, 'title-count', 200));
+        descriptionInput.addEventListener('input', () => updateCharCounter(descriptionInput, 'description-count', 1000));
+
+        updateCharCounter(titleInput, 'title-count', 200);
+        updateCharCounter(descriptionInput, 'description-count', 1000);
+
+        function showImagePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            if (input.value && isValidImageUrl(input.value)) {
+                preview.innerHTML = `<img src="${input.value}" alt="Preview" class="preview-image" onerror="this.style.display='none'">`;
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+
+        function isValidImageUrl(url) {
+            return /\.(jpg|jpeg|png|gif|webp)$/i.test(url) || url.includes('imgur') || url.includes('cloudinary');
+        }
+
+        for (let i = 1; i <= 3; i++) {
+            const input = document.getElementById(`image_url_${i}`);
+            input.addEventListener('input', () => showImagePreview(`image_url_${i}`, `preview_${i}`));
+            showImagePreview(`image_url_${i}`, `preview_${i}`);
+        }
+
+        const form = document.querySelector('.product-form');
+        const loading = document.querySelector('.loading');
+        const submitBtn = document.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', function(e) {
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        });
+
+        const priceInput = document.getElementById('price');
+        priceInput.addEventListener('input', function() {
+            if (this.value < 0) {
+                this.value = 0;
+            }
+        });
+    </script>
+</body>
+</html>
