@@ -83,6 +83,21 @@
             color: #1e1b4b;
             box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
         }
+
+        .btn-details {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-details:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
         
         .container {
             max-width: 1200px;
@@ -249,6 +264,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1rem;
         }
         
         .product-price {
@@ -265,6 +281,135 @@
             border-radius: 15px;
             font-size: 0.8rem;
             font-weight: 500;
+        }
+
+        /* Modal de detalles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(30, 27, 75, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 25px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fca5a5;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .modal-close:hover {
+            background: #ef4444;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            color: #bfdbfe;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .modal-details {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 1rem;
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .detail-label {
+            color: #60a5fa;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #bfdbfe;
+            font-size: 1rem;
+        }
+
+        .detail-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #10b981;
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+        }
+
+        .detail-description {
+            line-height: 1.6;
+        }
+
+        .detail-id {
+            font-family: 'Courier New', monospace;
+            background: rgba(30, 58, 138, 0.5);
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
         
         .pagination {
@@ -378,6 +523,16 @@
             
             .container {
                 padding: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+                max-height: 90vh;
+            }
+
+            .modal-title {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -498,6 +653,18 @@
                         <div class="product-price">${{ product.price }}</div>
                         <div class="product-category">{{ product.category.name|default:"Sin categoría" }}</div>
                     </div>
+                    <button 
+                        class="btn btn-details" 
+                        onclick="openProductModal({{ product.id }}, '{{ product.title|escapejs }}', '{{ product.description|escapejs }}', '{{ product.price }}', '{{ product.images.0|default:'https://via.placeholder.com/400x300/1e3a8a/60a5fa?text=Sin+Imagen'|escapejs }}', '{{ product.category.name|default:'Sin categoría'|escapejs }}')"
+                    >
+                        <i class="fas fa-info-circle"></i> Ver Detalles
+                    </button>
+                    <a href="{% url 'products:update_product' product.id %}" class="btn btn-primary">
+                        Actualizar
+                    </a>
+                    <a href="{% url 'products:delete_product' product.id %}" class="btn btn-outline">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </a>
                 </div>
             </div>
             {% endfor %}
@@ -542,6 +709,87 @@
         {% endif %}
     </div>
 
+    <!-- Modal de Detalles del Producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProductModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <img id="modalImage" src="" alt="" class="modal-image">
+            
+            <h2 id="modalTitle" class="modal-title"></h2>
+            
+            <div class="modal-details">
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-hashtag"></i> ID del Producto
+                    </div>
+                    <div id="modalId" class="detail-value detail-id"></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-tag"></i> Título
+                    </div>
+                    <div id="modalTitleDetail" class="detail-value"></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-dollar-sign"></i> Precio
+                    </div>
+                    <div id="modalPrice" class="detail-value detail-price"></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-layer-group"></i> Categoría
+                    </div>
+                    <div id="modalCategory" class="detail-value"></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-align-left"></i> Descripción Completa
+                    </div>
+                    <div id="modalDescription" class="detail-value detail-description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="products-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <img
+            src="{{ product.images.0|default:'https://via.placeholder.com/300x250/1e3a8a/60a5fa?text=Sin+Imagen' }}"
+            alt="{{ product.title }}"
+            class="product-image"
+            onerror="this.src='https://via.placeholder.com/300x250/1e3a8a/60a5fa?text=Sin+Imagen'"
+        >
+        <div class="product-content">
+            <h3 class="product-title">{{ product.title }}</h3>
+            <p class="product-description">{{ product.description }}</p>
+            <div class="product-footer">
+                <div class="product-price">${{ product.price }}</div>
+                <div class="product-category">{{ product.category.name|default:"Sin categoría" }}</div>
+            </div>
+            <!-- Formulario para actualizar producto -->
+            <form method="POST" action="{% url 'products:update_product' product.id %}">
+                {% csrf_token %}
+                <input type="text" name="title" value="{{ product.title }}" required>
+                <input type="number" name="price" value="{{ product.price }}" required>
+                <textarea name="description" required>{{ product.description }}</textarea>
+                <input type="hidden" name="category" value="{{ product.category.id }}">
+                <input type="text" name="image_url" value="{{ product.images.0|default:'' }}">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+    
+    
     <script>
         // Auto-submit del formulario de filtros
         document.getElementById('category').addEventListener('change', function() {
@@ -556,6 +804,40 @@
                     this.style.opacity = '1';
                 });
             });
+        });
+
+        // Funciones del modal
+        function openProductModal(id, title, description, price, image, category) {
+            document.getElementById('modalId').textContent = id;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalTitleDetail').textContent = title;
+            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('modalPrice').textContent = '$' + price;
+            document.getElementById('modalImage').src = image;
+            document.getElementById('modalImage').alt = title;
+            document.getElementById('modalCategory').textContent = category;
+            
+            document.getElementById('productModal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restaurar scroll del body
+        }
+
+        // Cerrar modal al hacer clic fuera del contenido
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProductModal();
+            }
+        });
+
+        // Cerrar modal con la tecla Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeProductModal();
+            }
         });
     </script>
 </body>
