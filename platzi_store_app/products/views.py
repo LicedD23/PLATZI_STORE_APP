@@ -10,6 +10,7 @@ import json
 # URL base de la API de Platzi Store
 PLATZI_API_BASE_URL = "https://api.escuelajs.co/api/v1"
 
+
 def products_menu_views(request):
     """Vista para consultar todos los productos de la API de Platzi Store"""
     
