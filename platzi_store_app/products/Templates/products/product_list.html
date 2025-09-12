@@ -758,35 +758,6 @@
             </div>
         </div>
     </div>
-    <div class="products-grid">
-    {% for product in products %}
-    <div class="product-card">
-        <img
-            src="{{ product.images.0|default:'https://via.placeholder.com/300x250/1e3a8a/60a5fa?text=Sin+Imagen' }}"
-            alt="{{ product.title }}"
-            class="product-image"
-            onerror="this.src='https://via.placeholder.com/300x250/1e3a8a/60a5fa?text=Sin+Imagen'"
-        >
-        <div class="product-content">
-            <h3 class="product-title">{{ product.title }}</h3>
-            <p class="product-description">{{ product.description }}</p>
-            <div class="product-footer">
-                <div class="product-price">${{ product.price }}</div>
-                <div class="product-category">{{ product.category.name|default:"Sin categoría" }}</div>
-            </div>
-            <!-- Formulario para actualizar producto -->
-            <form method="POST" action="{% url 'products:update_product' product.id %}">
-                {% csrf_token %}
-                <input type="text" name="title" value="{{ product.title }}" required>
-                <input type="number" name="price" value="{{ product.price }}" required>
-                <textarea name="description" required>{{ product.description }}</textarea>
-                <input type="hidden" name="category" value="{{ product.category.id }}">
-                <input type="text" name="image_url" value="{{ product.images.0|default:'' }}">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
-            </form>
-        </div>
-    </div>
-    {% endfor %}
 </div>
     
     

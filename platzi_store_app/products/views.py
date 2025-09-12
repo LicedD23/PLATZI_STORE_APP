@@ -96,6 +96,7 @@ def products_menu_views(request):
     
     return render(request, 'products/product_list.html', context)
 
+
 def add_product(request):
     """Vista para agregar nuevos productos a la API de Platzi Store"""
     
