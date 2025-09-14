@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required  # Añadir esta importación
 from .forms import ProductForm  # Importar el formulario
 import requests
 import json
@@ -63,7 +64,9 @@ def products_menu_views(request):
             'search_query': search,
             'selected_category': category_id,
             'title': 'Platzi Store - Consultar Productos',
-            'api_status': 'success'
+            'api_status': 'success',
+            # ✅ SOLUCIÓN: Explícitamente pasar el usuario al contexto
+            'user': request.user,  # Esta es la línea clave que faltaba
         }
         
     except requests.exceptions.RequestException as e:
@@ -78,7 +81,9 @@ def products_menu_views(request):
             'stats': {'total_products': 0, 'total_categories': 0},
             'title': 'Platzi Store - Error de Conexión',
             'api_status': 'error',
-            'error_message': str(e)
+            'error_message': str(e),
+            # ✅ SOLUCIÓN: También en el caso de error
+            'user': request.user,
         }
     
     except json.JSONDecodeError:
@@ -92,12 +97,13 @@ def products_menu_views(request):
             'categories': [],
             'stats': {'total_products': 0, 'total_categories': 0},
             'title': 'Platzi Store - Error de Datos',
-            'api_status': 'error'
+            'api_status': 'error',
         }
     
     return render(request, 'products/product_list.html', context)
 
 
+@login_required  # ✅ MEJORA: Requerir autenticación para agregar productos
 def add_product(request):
     """Vista para agregar nuevos productos a la API de Platzi Store"""
     
@@ -207,6 +213,7 @@ def get_product_detail(request, product_id):
     
     return render(request, 'products/product_list.html', context)
 
+@login_required  # ✅ MEJORA: Requerir autenticación para actualizar productos
 def update_product(request, product_id):
     """Vista para mostrar el formulario de actualización de un producto específico.""" 
     if request.method == 'GET': 
@@ -271,7 +278,7 @@ def update_product(request, product_id):
         return redirect('products:products_menu_views')
 
 
-
+@login_required  # ✅ MEJORA: Requerir autenticación para eliminar productos
 def delete_product(request, product_id):
     # Obtener información del producto antes de eliminar para mostrarla
     product_data = None

@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 from .forms import UserRegistrationForm, UserLoginForm
 
-from rest_framework import status
+from rest_framework import status # pyright: ignore[reportMissingImports]
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -223,7 +223,7 @@ def register_view(request):
     """
     if request.user.is_authenticated:
         messages.info(request, 'Ya tienes una sesión activa.')
-        return redirect('products:product_list')
+        return redirect('products:products_menu_views')
     
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -307,7 +307,7 @@ def login_view(request):
     """
     if request.user.is_authenticated:
         messages.info(request, 'Ya tienes una sesión activa.')
-        return redirect('products:product_list')
+        return redirect('products:products_menu_views')
     
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
@@ -353,7 +353,7 @@ def login_view(request):
                             request.session['refresh_token'] = response_data.get('refresh_token', '')
                         
                         # Redirigir a donde el usuario quería ir originalmente
-                        next_url = request.GET.get('next', 'products:product_list')
+                        next_url = request.GET.get('next', 'products:products_menu_views')
                         return redirect(next_url)
                     else:
                         # El usuario existe en la API pero no localmente, crearlo

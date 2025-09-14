@@ -93,6 +93,8 @@
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
             font-size: 1rem;
             padding: 1rem 2rem;
+            border: none;
+            cursor: pointer;
         }
 
         .btn-login:hover {
@@ -334,6 +336,31 @@
             font-size: 0.95rem;
         }
         
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .loading.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -409,7 +436,7 @@
             </div>
             {% endif %}
 
-            <form method="post" novalidate class="auth-form">
+            <form method="post" novalidate class="auth-form" id="loginForm">
                 {% csrf_token %}
 
                 <!-- Campo Username -->
@@ -466,16 +493,22 @@
 
                 <!-- Checkbox "Recordarme" -->
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
                     <label class="form-check-label" for="rememberMe">
                         Recordarme por 30 días
                     </label>
                 </div>
 
-                <!-- Botón de login -->
-                <a href="{% url 'products:products_menu_views' %}" class="btn btn-login" style="width: 100%; justify-content: center;">
-                    <i class="fas fa-sing-in-alt"></i> Ingresar
-                </a>
+                <!-- Botón de login CORREGIDO - Ahora es un button que envía el formulario -->
+                <button type="submit" class="btn btn-login" style="width: 100%; justify-content: center;" id="loginButton">
+                    <span class="btn-text">
+                        <i class="fas fa-sign-in-alt"></i> Ingresar
+                    </span>
+                    <span class="loading">
+                        <div class="spinner"></div>
+                        Iniciando sesión...
+                    </span>
+                </button>
                 
                 <!-- Enlaces adicionales -->
                 <div class="auth-switch">
@@ -517,11 +550,79 @@
             if (usernameField) {
                 usernameField.className = 'form-control';
                 usernameField.placeholder = 'Ingresa tu usuario';
+                usernameField.required = true;
             }
             
             if (passwordField) {
                 passwordField.className = 'form-control';
                 passwordField.placeholder = 'Ingresa tu contraseña';
+                passwordField.required = true;
+            }
+            
+            // Handle form submission with loading state
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            const btnText = loginButton.querySelector('.btn-text');
+            const loading = loginButton.querySelector('.loading');
+            
+            if (loginForm && loginButton) {
+                loginForm.addEventListener('submit', function(e) {
+                    // Validación básica
+                    const username = usernameField.value.trim();
+                    const password = passwordField.value.trim();
+                    
+                    if (!username || !password) {
+                        e.preventDefault();
+                        alert('Por favor, complete todos los campos');
+                        return;
+                    }
+                    
+                    // Mostrar estado de carga
+                    loginButton.disabled = true;
+                    btnText.style.display = 'none';
+                    loading.classList.add('active');
+                    
+                    // Si hay algún error, restaurar el botón
+                    setTimeout(() => {
+                        if (document.querySelector('.alert-error') || document.querySelector('.alert-danger')) {
+                            loginButton.disabled = false;
+                            btnText.style.display = 'flex';
+                            loading.classList.remove('active');
+                        }
+                    }, 100);
+                });
+            }
+            
+            // Handle "Remember me" functionality
+            const rememberCheckbox = document.getElementById('rememberMe');
+            if (rememberCheckbox) {
+                // Restore remembered state
+                const remembered = localStorage.getItem('rememberLogin');
+                if (remembered === 'true') {
+                    rememberCheckbox.checked = true;
+                    const savedUsername = localStorage.getItem('savedUsername');
+                    if (savedUsername && usernameField) {
+                        usernameField.value = savedUsername;
+                        if (passwordField) passwordField.focus();
+                    }
+                }
+                
+                // Save/remove on change
+                rememberCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        localStorage.setItem('rememberLogin', 'true');
+                    } else {
+                        localStorage.removeItem('rememberLogin');
+                        localStorage.removeItem('savedUsername');
+                    }
+                });
+                
+                // Save username on successful login
+                loginForm.addEventListener('submit', function() {
+                    if (rememberCheckbox.checked && usernameField.value.trim()) {
+                        localStorage.setItem('savedUsername', usernameField.value.trim());
+                    }
+                });
             }
         });
     </script>

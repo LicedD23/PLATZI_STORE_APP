@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta - Platzi Store</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background: rgba(30, 58, 138, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 30px rgba(59, 130, 246, 0.3);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #60a5fa;
+            text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+            text-decoration: none;
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #60a5fa;
+            border: 2px solid #60a5fa;
+        }
+        
+        .btn-outline:hover {
+            background: #60a5fa;
+            color: #1e1b4b;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.7);
+        }
+
+        .btn-register {
+            background: linear-gradient(45deg, #7c3aed, #5b21b6);
+            color: white;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+            font-size: 1rem;
+            padding: 1rem 2rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.7);
+        }
+
+        .btn-login {
+            background: transparent;
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+
+        .btn-login:hover {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+        
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .register-container {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(29, 78, 216, 0.15));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 30px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.3);
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .auth-icon {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+        
+        .auth-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .auth-title {
+            color: #bfdbfe;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(191, 219, 254, 0.5);
+        }
+        
+        .auth-subtitle {
+            color: rgba(191, 219, 254, 0.8);
+            font-size: 1rem;
+        }
+        
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            border-left: 4px solid;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .alert-success {
+            border-left-color: #10b981;
+            color: #6ee7b7;
+        }
+        
+        .alert-error, .alert-danger {
+            border-left-color: #ef4444;
+            color: #fca5a5;
+        }
+        
+        .alert-warning {
+            border-left-color: #f59e0b;
+            color: #fcd34d;
+        }
+
+        .alert-info {
+            border-left-color: #3b82f6;
+            color: #93c5fd;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #bfdbfe;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-label i {
+            margin-right: 0.5rem;
+            color: #60a5fa;
+        }
+        
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: stretch;
+        }
+        
+        .input-group-text {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-right: none;
+            border-radius: 15px 0 0 15px;
+            padding: 0.875rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+        }
+        
+        .input-group-text i {
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-left: none;
+            border-radius: 0 15px 15px 0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(30, 58, 138, 0.2);
+            color: #bfdbfe;
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+            background: rgba(30, 58, 138, 0.3);
+        }
+        
+        .form-control:focus + .btn-outline-secondary,
+        .input-group:focus-within .input-group-text {
+            border-color: #60a5fa;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(191, 219, 254, 0.6);
+        }
+        
+        .btn-outline-secondary {
+            background: rgba(30, 58, 138, 0.3);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-left: none;
+            border-radius: 0 15px 15px 0;
+            color: #bfdbfe;
+            padding: 0.875rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-secondary:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .strength-bar {
+            height: 4px;
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .strength-text {
+            color: rgba(191, 219, 254, 0.8);
+            margin-top: 0.25rem;
+        }
+        
+        .password-requirements {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .requirement {
+            color: rgba(191, 219, 254, 0.6);
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .requirement.met {
+            color: #6ee7b7;
+        }
+        
+        .requirement i {
+            font-size: 0.8rem;
+        }
+        
+        .error-message {
+            color: #fca5a5;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .username-check {
+            position: relative;
+        }
+
+        .username-status {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+        }
+
+        .username-status.checking {
+            color: #fbbf24;
+        }
+
+        .username-status.available {
+            color: #10b981;
+        }
+
+        .username-status.unavailable {
+            color: #ef4444;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(30, 58, 138, 0.2);
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .auth-switch p {
+            color: rgba(191, 219, 254, 0.8);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .loading.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .register-container {
+                padding: 2rem 1.5rem;
+                border-radius: 25px;
+            }
+            
+            .auth-title {
+                font-size: 1.6rem;
+            }
+            
+            .nav-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-row .form-group {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .auth-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .auth-icon i {
+                font-size: 1.5rem;
+            }
+
+            .auth-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'products:products_menu_views' %}" class="logo">
+                <i class="fas fa-store"></i> Platzi Store
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="register-container">
+            <div class="register-header">
+                <div class="auth-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2 class="auth-title">Crear Cuenta</h2>
+                <p class="auth-subtitle">Únete a nuestra comunidad</p>
+            </div>
+            
+            <!-- Mostrar mensajes de error o éxito -->
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-info-circle"></i> {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" novalidate class="auth-form" id="registerForm">
+                {% csrf_token %}
+
+                <!-- Campos Nombre y Apellido en una fila -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                            <i class="fas fa-user"></i> {{ form.first_name.label }}
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            {{ form.first_name }}
+                        </div>
+                        {% if form.first_name.errors %}
+                            {% for error in form.first_name.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> {{ error }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                            <i class="fas fa-user"></i> {{ form.last_name.label }}
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            {{ form.last_name }}
+                        </div>
+                        {% if form.last_name.errors %}
+                            {% for error in form.last_name.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i> {{ error }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Campo Username con verificación -->
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                        <i class="fas fa-at"></i> {{ form.username.label }}
+                    </label>
+                    <div class="input-group username-check">
+                        <span class="input-group-text">
+                            <i class="fas fa-at"></i>
+                        </span>
+                        {{ form.username }}
+                        <span class="username-status" id="usernameStatus"></span>
+                    </div>
+                    {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> {{ error }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Campo Email -->
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                        <i class="fas fa-envelope"></i> {{ form.email.label }}
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        {{ form.email }}
+                    </div>
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> {{ error }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Campo Password con indicador de fuerza -->
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> {{ form.password1.label }}
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        {{ form.password1 }}
+                        <button class="btn-outline-secondary" type="button" id="togglePassword1">
+                            <i class="fas fa-eye" id="eyeIcon1"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText">Seguridad de la contraseña</div>
+                        <div class="password-requirements">
+                            <div class="requirement" id="req-length">
+                                <i class="fas fa-times"></i> Al menos 8 caracteres
+                            </div>
+                            <div class="requirement" id="req-letter">
+                                <i class="fas fa-times"></i> Al menos una letra
+                            </div>
+                            <div class="requirement" id="req-number">
+                                <i class="fas fa-times"></i> Al menos un número
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if form.password1.errors %}
+                        {% for error in form.password1.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> {{ error }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Campo Confirmar Password -->
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> {{ form.password2.label }}
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        {{ form.password2 }}
+                        <button class="btn-outline-secondary" type="button" id="togglePassword2">
+                            <i class="fas fa-eye" id="eyeIcon2"></i>
+                        </button>
+                    </div>
+                    <div id="passwordMatch" class="error-message" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i> Las contraseñas no coinciden
+                    </div>
+                    {% if form.password2.errors %}
+                        {% for error in form.password2.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> {{ error }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Errores generales del formulario -->
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Botón de registro -->
+                <button type="submit" class="btn btn-register" style="width: 100%; justify-content: center;" id="registerButton">
+                    <span class="btn-text">
+                        <i class="fas fa-user-plus"></i> Crear mi cuenta
+                    </span>
+                    <span class="loading">
+                        <div class="spinner"></div>
+                        Creando cuenta...
+                    </span>
+                </button>
+                
+                <!-- Enlaces adicionales -->
+                <div class="auth-switch">
+                    <p>¿Ya tienes una cuenta?</p>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a elementos
+            const form = document.getElementById('registerForm');
+            const usernameField = document.getElementById('{{ form.username.id_for_label }}');
+            const emailField = document.getElementById('{{ form.email.id_for_label }}');
+            const firstNameField = document.getElementById('{{ form.first_name.id_for_label }}');
+            const lastNameField = document.getElementById('{{ form.last_name.id_for_label }}');
+            const password1Field = document.getElementById('{{ form.password1.id_for_label }}');
+            const password2Field = document.getElementById('{{ form.password2.id_for_label }}');
+            const registerButton = document.getElementById('registerButton');
+            const btnText = registerButton.querySelector('.btn-text');
+            const loading = registerButton.querySelector('.loading');
+
+            // Configurar campos de formulario
+            if (usernameField) {
+                usernameField.className = 'form-control';
+                usernameField.placeholder = 'usuario123';
+                usernameField.required = true;
+            }
+
+            if (emailField) {
+                emailField.className = 'form-control';
+                emailField.placeholder = 'tu@email.com';
+                emailField.required = true;
+            }
+
+            if (firstNameField) {
+                firstNameField.className = 'form-control';
+                firstNameField.placeholder = 'Tu nombre';
+                firstNameField.required = true;
+            }
+
+            if (lastNameField) {
+                lastNameField.className = 'form-control';
+                lastNameField.placeholder = 'Tu apellido';
+                lastNameField.required = true;
+            }
+
+            if (password1Field) {
+                password1Field.className = 'form-control';
+                password1Field.placeholder = 'Mínimo 8 caracteres';
+                password1Field.required = true;
+            }
+
+            if (password2Field) {
+                password2Field.className = 'form-control';
+                password2Field.placeholder = 'Confirma tu contraseña';
+                password2Field.required = true;
+            }
+
+            // Toggle password visibility
+            function setupPasswordToggle(toggleButtonId, passwordFieldId, eyeIconId) {
+                const toggleButton = document.getElementById(toggleButtonId);
+                const passwordField = document.getElementById(passwordFieldId);
+                const eyeIcon = document.getElementById(eyeIconId);
+                
+                if (toggleButton && passwordField && eyeIcon) {
+                    toggleButton.addEventListener('click', function() {
+                        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordField.setAttribute('type', type);
+                        eyeIcon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+                    });
+                }
+            }
+
+            setupPasswordToggle('togglePassword1', '{{ form.password1.id_for_label }}', 'eyeIcon1');
+            setupPasswordToggle('togglePassword2', '{{ form.password2.id_for_label }}', 'eyeIcon2');
+
+            // Username availability check
+            let usernameTimeout;
+            if (usernameField) {
+                usernameField.addEventListener('input', function() {
+                    const username = this.value.trim();
+                    const statusElement = document.getElementById('usernameStatus');
+                    
+                    clearTimeout(usernameTimeout);
+                    
+                    if (username.length < 3) {
+                        statusElement.className = 'username-status';
+                        statusElement.innerHTML = '';
+                        return;
+                    }
+                    
+                    statusElement.className = 'username-status checking';
+                    statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    
+                    usernameTimeout = setTimeout(() => {
+                        // Simulate API call (replace with actual API call)
+                        fetch(`/api/check-username/?username=${encodeURIComponent(username)}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.available) {
+                                    statusElement.className = 'username-status available';
+                                    statusElement.innerHTML = '<i class="fas fa-check"></i>';
+                                } else {
+                                    statusElement.className = 'username-status unavailable';
+                                    statusElement.innerHTML = '<i class="fas fa-times"></i>';
+                                }
+                            })
+                            .catch(() => {
+                                statusElement.className = 'username-status';
+                                statusElement.innerHTML = '';
+                            });
+                    }, 500);
+                });
+            }
+
+            // Password strength checker
+            if (password1Field) {
+                password1Field.addEventListener('input', function() {
+                    checkPasswordStrength(this.value);
+                });
+            }
+
+            function checkPasswordStrength(password) {
+                const lengthReq = document.getElementById('req-length');
+                const letterReq = document.getElementById('req-letter');
+                const numberReq = document.getElementById('req-number');
+                const strengthFill = document.getElementById('strengthFill');
+                const strengthText = document.getElementById('strengthText');
+
+                let score = 0;
+                const requirements = [
+                    { element: lengthReq, test: password.length >= 8 },
+                    { element: letterReq, test: /[a-zA-Z]/.test(password) },
+                    { element: numberReq, test: /\d/.test(password) }
+                ];
+
+                requirements.forEach(req => {
+                    if (req.test) {
+                        req.element.classList.add('met');
+                        req.element.querySelector('i').className = 'fas fa-check';
+                        score++;
+                    } else {
+                        req.element.classList.remove('met');
+                        req.element.querySelector('i').className = 'fas fa-times';
+                    }
+                });
+
+                const percentage = (score / 3) * 100;
+                strengthFill.style.width = `${percentage}%`;
+
+                if (score === 0) {
+                    strengthText.textContent = 'Muy débil';
+                    strengthText.style.color = '#ef4444';
+                } else if (score === 1) {
+                    strengthText.textContent = 'Débil';
+                    strengthText.style.color = '#f59e0b';
+                } else if (score === 2) {
+                    strengthText.textContent = 'Buena';
+                    strengthText.style.color = '#10b981';
+                } else {
+                    strengthText.textContent = 'Excelente';
+                    strengthText.style.color = '#10b981';
+                }
+            }
+
+            // Password match checker
+            if (password1Field && password2Field) {
+                function checkPasswordMatch() {
+                    const password1 = password1Field.value;
+                    const password2 = passwor
